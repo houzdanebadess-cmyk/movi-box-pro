@@ -1576,9 +1576,9 @@
     </script>
 
     <script>
-      // Ta configuration Firebase
+      // 1. Ta configuration (Le "Badge d'accès" à tes données)
       const firebaseConfig = {
-        apiKey: "AIzaSyDEdabt4b_cHhxBE3NnbtPDvn8evoLqM6c", // Remplace par ta clé AIza...
+        apiKey: "AIzaSyDEdabt4b_cHhxBE3NnbtAosD9T586fHsc", // C'est ta clé de la photo 89
         authDomain: "movie-live-88339.firebaseapp.com",
         projectId: "movie-live-88339",
         storageBucket: "movie-live-88339.appspot.com",
@@ -1586,38 +1586,42 @@
         appId: "1:847424905335:web:8e3881270b2401878f448b",
       };
 
-      // Initialisation
-      firebase.initializeApp(firebaseConfig);
+      // 2. Initialisation de Firebase
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+      }
       const db = firebase.firestore();
 
-      // Fonction pour afficher les films
+      // 3. La fonction qui va chercher les films dans ta base de données
       async function loadMovies() {
-        const container = document.getElementById("movie-container"); // Vérifie que tu as bien cet ID dans ton HTML
-        const snapshot = await db.collection("movies").get();
+        const movieContainer = document.getElementById("movie-list");
 
-        if (snapshot.empty) {
-          container.innerHTML = "<p class='text-white'>Aucun film trouvé.</p>";
-          return;
-        }
+        // Si la balise movie-list n'existe pas, on arrête pour éviter les erreurs
+        if (!movieContainer) return;
 
-        container.innerHTML = snapshot.docs
-          .map((doc) => {
+        try {
+          const snapshot = await db.collection("movies").get();
+          movieContainer.innerHTML = ""; // On vide l'écran avant d'afficher
+
+          snapshot.docs.forEach((doc) => {
             const movie = doc.data();
-            return `
-        <div class="col-md-3 mb-4">
-          <div class="card bg-dark text-white border-secondary">
-            <img src="${movie.poster}" class="card-img-top" alt="${movie.title}">
-            <div class="card-body">
-              <h5 class="card-title">${movie.title}</h5>
-              <p class="card-text text-secondary">${movie.year || ""}</p>
+            // On crée l'affiche du film avec le design Bootstrap
+            movieContainer.innerHTML += `
+          <div class="col-6 col-md-3 mb-4">
+            <div class="card bg-dark text-white border-0 shadow">
+              <img src="${movie.poster}" class="card-img p-1 rounded" alt="${movie.title}">
+              <div class="card-body p-2">
+                <p class="card-text small m-0">${movie.title}</p>
+              </div>
             </div>
-          </div>
-        </div>`;
-          })
-          .join("");
+          </div>`;
+          });
+        } catch (e) {
+          console.log("Erreur : ", e);
+        }
       }
 
-      // Lancement
+      // 4. On dit au navigateur de lancer loadMovies dès que la page est prête
       window.onload = loadMovies;
     </script>
 
