@@ -1,0 +1,17 @@
+{
+  "name": "MOVI BOX PRO",
+  "short_name": "MoviBox",
+  "description": "Le meilleur du streaming avec MOVI BOX PRO",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#050505",
+  "theme_color": "#E50914",
+  "icons": [
+  {
+    "src": "icon.png",
+    "sizes": "512x512",
+    "type": "image/png",
+    "purpose": "any maskable"
+  }
+]
+}
